@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <center>
+        <h1>{{ header }}</h1>
+        <p>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        </p>
+        <table cellpadding="10" cellspacing="20">
+            <tr>
+                <td>Name</td>
+                 <td>Size</td>
+                <td>Actions</td>
+            </tr>
+        {%for file, size, actions in files%}
+            <tr>
+                <td>{{file}}</td>
+                <td>{{size}}</td>
+                <td>
+                    {%for action, url in actions.items()%}
+                        |<a href="{{ url.replace('{file}', file) }}">{{action}}</a> |
+                    {%endfor%}
+                </td>
+            </tr>
+        {%endfor%}
+        </table>
+
+        <a href="/">Home</a>
+    </center>
+</body>
+</html>

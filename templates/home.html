@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul class=flashes>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
+    <center>
+		<div style="border: 1px solid black; padding: 20px;">
+			<h1>PDF to HTML Processing</h1>
+			<a href="/conversion/upload">Upload</a><br>
+			<a href="/conversion/proc/view">View Processed</a><br>
+			<a href="/conversion/raw/view">View Raw</a>
+		</div>
+    </center>
+</body>
+</html>
