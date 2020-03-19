@@ -1,5 +1,5 @@
 from flask import make_response, render_template, request, Blueprint, redirect, flash
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 from config.token import TOKEN
 
 bp = Blueprint('auth', __name__, template_folder='templates')
@@ -26,6 +26,7 @@ def ensure_secure():
     else:
         resp = make_response(render_template('auth.html'))
         resp.set_cookie('auth_redirect', request.url)
+        resp.set_cookie('token', '')
         return resp
 
 
@@ -33,14 +34,17 @@ def verify_token(token, encrypted=True):
     if not token:
         return False
 
-    if encrypted:
-        f = Fernet(TOKEN)
-        token = f.decrypt(token.encode('ASCII'))
-        if token == TOKEN:
-            return True
-    else:
-        if token == TOKEN.decode('utf8'):
-            return True
+    try:
+        if encrypted:
+            f = Fernet(TOKEN)
+            token = f.decrypt(token.encode('ASCII'))
+            if token == TOKEN:
+                return True
+        else:
+            if token == TOKEN.decode('utf8'):
+                return True
+    except InvalidToken as e:
+        return False
 
     return False
 

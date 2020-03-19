@@ -12,10 +12,12 @@ from processors.conversion import process_file
 
 prefix = __name__.split('.')[-1]
 
-UPLOAD_FOLDER = os.path.abspath('./storage/uploads/' + prefix)
-PROC_FOLDER = os.path.abspath('./storage/processed/' + prefix)
-LOG_DIR = os.path.abspath('./storage/logs/' + prefix)
-CACHE_DIR = os.path.abspath('./storage/cache/' + prefix)
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+UPLOAD_FOLDER = BASE_DIR+'/storage/uploads/' + prefix
+PROC_FOLDER = BASE_DIR+'/storage/processed/' + prefix
+LOG_DIR = BASE_DIR+'/storage/logs/' + prefix
+CACHE_DIR = BASE_DIR+'/storage/cache/' + prefix
 
 bp = Blueprint(prefix, __name__, template_folder='templates')
 
