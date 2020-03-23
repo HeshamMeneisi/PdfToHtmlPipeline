@@ -45,9 +45,9 @@ def process_file(fname, dest_dir):
                               single_file=True,
                               output_file=output_file,
                               # complex_styles=True,
-                              # embed_images=True,
+                              embed_images=True,
                               no_frames=True,
-                              no_images=True,
+                              # no_images=True,
                               center_pages=True,
                               no_bg_color=True,
                               # title_from_file_name=True
@@ -148,9 +148,13 @@ def detect_tags(html_file):
 
         htag = soup.new_tag("h" + str(current_level))
         g0 = header['group'][0]
-        htag['style'] = "all: unset;"
+        htag['style'] = "all: unset;position:absolute; top: %spx; left: 0px;" % g0['pos'][1]
         for g in header['group']:
+            g['p']['style'] = re.sub("top:[^;]+;", "", g['p']['style'])
             g['p'].wrap(htag)
 
+    # t = soup.new_tag("div")
+    # t.string = "TEXT123"
+    # soup.find('body').insert(0, t)
     with open(html_file, "w") as f:
         f.write(str(soup))
