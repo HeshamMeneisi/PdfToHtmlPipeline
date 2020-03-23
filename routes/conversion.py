@@ -12,7 +12,7 @@ from processors.conversion import process_file
 
 prefix = __name__.split('.')[-1]
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = os.path.abspath(os.path.dirname(__file__)+"/../")
 
 UPLOAD_FOLDER = BASE_DIR+'/storage/uploads/' + prefix
 PROC_FOLDER = BASE_DIR+'/storage/processed/' + prefix

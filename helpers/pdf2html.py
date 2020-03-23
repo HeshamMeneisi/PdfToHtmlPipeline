@@ -28,6 +28,7 @@ def convert_from_path(
     title_from_file_name=False,
     embed_images=False,
     center_pages=False,
+    no_bg_color=False,
     first_page=None,
     last_page=None,
     dotpdf_to_link=None,
@@ -149,7 +150,10 @@ def convert_from_path(
 
     ignore_pattern = "(.+\\.pdf)"
 
-    output_html = os.path.join(temp_output_folder, file_name + "-html.html")
+    output_html = os.path.join(temp_output_folder, file_name + ".html")
+    print(output_html)
+    if not os.path.exists(output_html):
+        output_html = os.path.join(temp_output_folder, file_name + "-html.html")
 
     if embed_images:
         ignore_pattern += "|(.+\\.png)|(.+\\.jpg)"
@@ -170,11 +174,14 @@ def convert_from_path(
     if title is not None:
         replace_in_file(output_html, "<title>{0}</title>".format(output_html), "<title>{0}</title>".format(title))
 
+    if no_bg_color:
+       replace_in_file(output_html, '<body bgcolor="[^"]+"', '<body')
+
     if output_file:
         output_file_dir = os.path.dirname(output_file)
         copy_tree(temp_output_folder, output_file_dir, ignore_pattern)
         if single_file:
-            os.rename(os.path.join(output_file_dir, file_name+"-html.html"), output_file)
+            os.rename(os.path.join(output_file_dir, os.path.basename(output_html)), output_file)
 
     if output_folder:
         copy_tree(temp_output_folder, output_folder, ignore_pattern)
@@ -196,7 +203,7 @@ def embed_image_into_html(image_path, html_path):
 def replace_in_file(file_path, old, new):
     fin = open(file_path, "rt")
     data = fin.read()
-    data = data.replace(old, new)
+    data = re.sub(old, new, data)
     fin.close()
 
     fin = open(file_path, "wt")

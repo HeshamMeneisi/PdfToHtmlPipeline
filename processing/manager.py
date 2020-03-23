@@ -1,5 +1,5 @@
 from multiprocessing import Process
-from helpers.environment import DEBUGGING
+from config.environment import DEBUGGING
 from datetime import datetime
 import traceback
 import os
