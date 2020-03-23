@@ -31,13 +31,16 @@ def process_file(fname, dest_dir):
         raise Exception(
             "Unsupported file format (%s) accepted formats are: .pdf, .zip(containing pdf files)" % ext)
 
-    client_data = {}
+    file_name = '.'.join(os.path.splitext(os.path.split(fname)[-1])[:-1])
+    for line in process_files(files, dest_dir, file_name):
+        yield line
 
+
+def process_files(files, dest_dir, dest_name):
     for file in files:
         yield "Converting file [%s] ..." % file
         ext = os.path.splitext(file)[-1]
-        file_name = '.'.join(os.path.splitext(os.path.split(fname)[-1])[:-1])
-        output_file = os.path.join(dest_dir, file_name + ".html")
+        output_file = os.path.join(dest_dir, dest_name + ".html")
         if os.path.exists(output_file):
             raise Exception("Output target (%s) already exists. Please delete or rename current file before upload.")
         if ext.lower() == ".pdf":
@@ -58,17 +61,18 @@ def process_file(fname, dest_dir):
             raise Exception("Unsupported file type (%s) please only include [.pdf, .zip] files." % ext)
 
 
-def detect_tags(html_file):
-    soup = BeautifulSoup(open(html_file), "html.parser")
+# H# tag detection
 
-    def get_page(el):
-        parent = el.parent
-        while parent.parent.name != "body":
-            parent = parent.parent
-        return parent["id"]
 
+def get_page(el):
+    parent = el.parent
+    while parent.parent.name != "body":
+        parent = parent.parent
+    return parent["id"]
+
+
+def find_htag_candidates(soup):
     candidates = []
-
     for p in soup.find_all('p'):
         children = list(p.children)
         if len(children) != 1:
@@ -91,8 +95,11 @@ def detect_tags(html_file):
             "page": get_page(p)
         })
 
-    merged_candidates = {}
+    return candidates
 
+
+def create_headers(candidates):
+    merged_candidates = {}
     for c in candidates:
         key = c['page'] + '_' + c['pos'][1]
         if key not in merged_candidates:
@@ -121,6 +128,15 @@ def detect_tags(html_file):
         else:
             continue
         headers.append(header)
+    return headers
+
+
+def detect_tags(html_file):
+    soup = BeautifulSoup(open(html_file), "html.parser")
+
+    candidates = find_htag_candidates(soup)
+
+    headers = create_headers(candidates)
 
     pattern_state = {}
     current_level = 0
