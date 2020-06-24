@@ -1,0 +1,13 @@
+version: '3.7'
+
+# Not familiar with this syntax ${a:-b} ?
+# It's variable interpolation for a with default value b
+
+services:
+  app:
+    build: .
+    restart: always
+    ports:
+      - 8888:8080
+    volumes:
+      - ~/storage:/app/storage
