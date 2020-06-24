@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE $PORT
 
-ENTRYPOINT flask run --port $PORT
+ENTRYPOINT FLASK_APP=run.py flask run --port $PORT --host=0.0.0.0

@@ -4,6 +4,7 @@ else
     echo "Installing docker ..."
     # Docker
     sudo apt-get install docker -y
+    curl -sSL https://get.docker.com/ | sh
     # Use docker without sudo
     sudo service docker start
     sudo usermod -a -G docker ec2-user
