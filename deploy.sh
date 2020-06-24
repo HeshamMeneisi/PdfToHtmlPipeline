@@ -11,6 +11,13 @@ else
     sudo chkconfig docker on
 fi
 
+if hash curl 2>/dev/null; then
+  echo "Found: curl"
+else
+  echo "Installing curl ..."
+  sudo apt-get install curl
+fi
+
 if hash docker-compose 2>/dev/null; then
     echo "Found: docker-compose"
 else
