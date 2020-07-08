@@ -9,9 +9,11 @@ def start_processing(do_work, logf):
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         return "DEBUG"
     else:
-        with open(logf, 'a+') as f:
+        with open(logf, 'a+', errors="surrogateescape") as f:
             ts = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
             f.write("\n[%s] Started Processing.\n" %ts)
+            if DEBUGGING:
+                f.write("\n[%s] DEBUG MODE ENABLED\n" % ts)
 
         if DEBUGGING:
             do_work()
@@ -24,7 +26,7 @@ def create_worker(process_file, proc_args, prefix, logf):
     def do_work():
         try:
             for line in process_file(*proc_args):
-                with open(logf, 'a+') as f:
+                with open(logf, 'a+', errors="surrogateescape") as f:
                     ts = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
                     f.write("[%s] %s\n" % (ts, line));
 

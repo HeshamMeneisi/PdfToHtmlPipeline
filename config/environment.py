@@ -1,5 +1,11 @@
-try:
-    import pydevd
-    DEBUGGING = True
-except ImportError:
-    DEBUGGING = False
+import inspect
+
+
+def is_debugging():
+    for frame in inspect.stack():
+        if frame[1].endswith("pydevd.py"):
+            return True
+    return False
+
+
+DEBUGGING = is_debugging()
