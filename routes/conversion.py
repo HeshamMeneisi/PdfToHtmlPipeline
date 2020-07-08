@@ -20,7 +20,7 @@ LOG_DIR = BASE_DIR+'/storage/logs/' + prefix
 CACHE_DIR = BASE_DIR+'/storage/cache/' + prefix
 
 bp = Blueprint(prefix, __name__, template_folder='templates')
-
+ACCEPTED_EXTENSIONS = ['pdf', 'zip']
 
 for d in [UPLOAD_FOLDER, PROC_FOLDER, LOG_DIR, CACHE_DIR]:
     if not os.path.exists(d):
@@ -109,9 +109,10 @@ def proc_raw(fname):
 
 @bp.route('/upload', methods=['POST'])
 def upload_file():
-    return upload_to(UPLOAD_FOLDER, ['zip', 'pdf'])
+    return upload_to(UPLOAD_FOLDER, ACCEPTED_EXTENSIONS)
 
 
 @bp.route('/upload')
 def upload_form():
-    return render_template('upload.html', title="Upload Raw - PDF", header="Upload Raw File (PDF)")
+    return render_template('upload.html', title="Upload Raw - PDF", header="Upload Raw File (PDF)",
+                           accept=','.join(['.'+e for e in ACCEPTED_EXTENSIONS]))
