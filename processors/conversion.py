@@ -38,12 +38,13 @@ def process_file(fname, dest_dir):
 
 def process_files(files, dest_dir, dest_name):
     for file in files:
-        yield "Converting file [%s] ..." % file
+        yield "Processing file [%s] ..." % file
         ext = os.path.splitext(file)[-1]
         output_file = os.path.join(dest_dir, dest_name + ".html")
         if os.path.exists(output_file):
             raise Exception("Output target (%s) already exists. Please delete or rename current file before upload.")
         if ext.lower() == ".pdf":
+            yield "Converting PDF to HTML"
             convert_from_path(file,
                               single_file=True,
                               output_file=output_file,
@@ -132,7 +133,7 @@ def create_headers(candidates):
 
 
 def detect_tags(html_file):
-    soup = BeautifulSoup(open(html_file), "html.parser")
+    soup = BeautifulSoup(open(html_file, errors="surrogateescape"), "html.parser")
 
     candidates = find_htag_candidates(soup)
 
@@ -172,5 +173,5 @@ def detect_tags(html_file):
     # t = soup.new_tag("div")
     # t.string = "TEXT123"
     # soup.find('body').insert(0, t)
-    with open(html_file, "w") as f:
+    with open(html_file, "w", errors="surrogateescape") as f:
         f.write(str(soup))

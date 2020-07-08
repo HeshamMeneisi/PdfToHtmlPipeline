@@ -201,12 +201,12 @@ def embed_image_into_html(image_path, html_path):
 
 
 def replace_in_file(file_path, old, new):
-    fin = open(file_path, "rt")
+    fin = open(file_path, "rt", errors="surrogateescape")
     data = fin.read()
     data = re.sub(old, new, data)
     fin.close()
 
-    fin = open(file_path, "wt")
+    fin = open(file_path, "wt", errors="surrogateescape")
     fin.write(data)
     fin.close()
 

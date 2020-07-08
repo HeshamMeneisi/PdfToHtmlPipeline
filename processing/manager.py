@@ -35,6 +35,7 @@ def create_worker(process_file, proc_args, prefix, logf):
                 ts = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
                 f.write("[%s][EXCEPTION]" % ts)
                 f.write(repr(ex))
+                traceback.print_exc(None, f)
                 traceback.print_exc()
 
         ts = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
